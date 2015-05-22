@@ -93,6 +93,7 @@ int main(){
 **********************************************************/
     for(;;){
         cap >> frame; // get a new frame from camera
+
         //cvtColor(frame, edges, CV_BGR2GRAY);
         //cout << "" << endl;
         /*
@@ -113,14 +114,45 @@ int main(){
         minMaxLoc(frameC[0],&minVal,&maxVal);
         cout << "min: " << minVal << ", ";
         cout << "max: " << maxVal << endl;
-        */
-        filter2D(frameF, fitr2, CV_32FC3, krnGauss);
-        filter2D(fitr2,  fitr2, CV_32FC3, krnGauss);
-        filter2D(fitr2,  fitr3, CV_32FC3, krnGauss);
-        filter2D(fitr3,  fitr4, CV_32FC3, krnGauss);
-        filter2D(fitr4,  fitr5, CV_32FC3, krnGauss);
+*/
+        Mat fltr2,fltr3,fltr4,fltr5,resuDDD;
+
+        filter2D(frameF, fltr2, CV_32FC3, krnGauss);
+        filter2D(fltr2,  fltr2, CV_32FC3, krnGauss);
+        filter2D(fltr2,  fltr3, CV_32FC3, krnGauss);
+        filter2D(fltr3,  fltr4, CV_32FC3, krnGauss);
+        filter2D(fltr4,  fltr5, CV_32FC3, krnGauss);/*
         filter2D(fitr5,  fitr6, CV_32FC3, krnGauss);
         filter2D(fitr6,  fitr7, CV_32FC3, krnGauss);
+        filter2D(fitr7,  fitr8, CV_32FC3, krnGauss);*/
+
+        resuDDD = fltr2-fltr5;
+
+        Mat fitr1;
+
+        filter2D(frameF, fitr1, CV_32FC3, krnGauss);
+        resize(fitr1, fitr1, Size(), 0.5, 0.5);
+
+        filter2D(fitr1,  fitr2, CV_32FC3, krnGauss);
+        resize(fitr2, fitr2, Size(), 0.5, 0.5);
+
+        filter2D(fitr2,  fitr3, CV_32FC3, krnGauss);
+        resize(fitr3, fitr3, Size(), 0.5, 0.5);
+
+        filter2D(fitr3,  fitr4, CV_32FC3, krnGauss);
+        resize(fitr4, fitr4, Size(), 0.5, 0.5);
+
+        filter2D(fitr4,  fitr5, CV_32FC3, krnGauss);
+        resize(fitr5, fitr5, Size(), 0.5, 0.5);
+/*
+        filter2D(fitr5,  fitr6, CV_32FC3, krnGauss);
+        resize(fitr6, fitr6, Size(), 0.5, 0.5);
+
+        filter2D(fitr6,  fitr7, CV_32FC3, krnGauss);
+        resize(fitr7, fitr7, Size(), 0.5, 0.5);
+
+        filter2D(fitr7,  fitr8, CV_32FC3, krnGauss);
+        resize(fitr8, fitr8, Size(), 0.5, 0.5);
 
         //Canny(edges, edges, 0, 30, 3);
 /*
@@ -130,31 +162,92 @@ int main(){
         minMaxLoc(fitr7C[0],&minVal,&maxVal);
         cout << "min: " << minVal << ", " << "max: " << maxVal << endl;
 */
-        resul = fitr2-fitr5  +  fitr2-fitr6  +
+
+        resize(fitr5, fitr5, Size(), 8, 8,INTER_LINEAR);
+/*        resize(fitr6, fitr6, Size(), 8, 8,INTER_LINEAR);
+        resize(fitr7, fitr7, Size(), 8, 8,INTER_LINEAR);
+*/
+
+        Mat resul2, resul3, resul4;
+
+        resul2 = fitr2-fitr5;
+
+        /*cout << frame.rows << "," << frame.cols << endl;
+        /*        resul3 = fitr3-fitr6;
+        resul4 = fitr4-fitr7;
+
+        resize(fitr6, fitr6, Size(), 2, 2,INTER_LINEAR);
+        resize(fitr7, fitr7, Size(), 2, 2,INTER_LINEAR);
+        resize(fitr8, fitr8, Size(),16,16,INTER_LINEAR);
+
+        resul2 += fitr2-fitr6;
+        resul3 += fitr3-fitr7;
+        resul4 += fitr4-fitr8;
+
+        resize(resul3, resul3, Size(), 2, 2,INTER_LINEAR);
+        resize(resul4, resul4, Size(), 4, 4,INTER_LINEAR);
+*/
+        /*resul = fitr2-fitr5 /* +  fitr2-fitr6  +
                 fitr3-fitr6  +  fitr3-fitr7  +
-                fitr4-fitr7  +  fitr4-fitr8  ;
+                fitr4-fitr7  +  fitr4-fitr8  ;*/
+
+
+
+
+        resul = resul2 /*+ resul3 + resul4*/;
+
+        resize(resul, resul, Size(), 4, 4,INTER_LINEAR);
+
 
         vector<Mat> resulC(3);
         split(resul,resulC);
 
-        minMaxLoc(resulC[0],&minVal,&maxVal);
+        /*minMaxLoc(resulC[0],&minVal,&maxVal);
         resulC[0] = (resulC[0]-minVal)*255/(maxVal-minVal);
 
         minMaxLoc(resulC[1],&minVal,&maxVal);
         resulC[1] = (resulC[1]-minVal)*255/(maxVal-minVal);
 
         minMaxLoc(resulC[2],&minVal,&maxVal);
-        resulC[2] = (resulC[2]-minVal)*255/(maxVal-minVal);
+        resulC[2] = (resulC[2]-minVal)*255/(maxVal-minVal);*/
 
-        merge(resulC,resul);
-        resul.convertTo(resul, CV_8UC3);
+        resulC[0] += resulC[1] + resulC[2];
+
+        minMaxLoc(resulC[0],&minVal,&maxVal);
+        resulC[0] = (resulC[0]-minVal)*255/(maxVal-minVal);
+
+        //merge(resulC,resul);
+        //resul.convertTo(resul, CV_8UC3);
+        resulC[0].convertTo(resulC[0], CV_8UC3);
+
+        vector<Mat> resuDDDC(3);
+        split(resuDDD,resuDDDC);
+
+        /*minMaxLoc(resuDDDC[0],&minVal,&maxVal);
+        resuDDDC[0] = (resuDDDC[0]-minVal)*255/(maxVal-minVal);
+
+        minMaxLoc(resuDDDC[1],&minVal,&maxVal);
+        resuDDDC[1] = (resuDDDC[1]-minVal)*255/(maxVal-minVal);
+
+        minMaxLoc(resuDDDC[2],&minVal,&maxVal);
+        resuDDDC[2] = (resuDDDC[2]-minVal)*255/(maxVal-minVal);*/
+
+        resuDDDC[0] += resuDDDC[1] + resuDDDC[2];
+
+        minMaxLoc(resuDDDC[0],&minVal,&maxVal);
+        resuDDDC[0] = (resuDDDC[0]-minVal)*255/(maxVal-minVal);
+
+        //merge(resuDDDC,resuDDD);
+        //resuDDD.convertTo(resuDDD, CV_8UC3);
+        resuDDDC[0].convertTo(resuDDDC[0], CV_8UC3);
+
         /*
         normalize(resul, resul, 0, 255, NORM_MINMAX, CV_32FC3);
         resul.convertTo(resul, CV_8U);
         */
 
-        imshow("Camara", frame);
-        imshow("Filtrado", resul);
+        imshow("Camara", resuDDDC[0]);
+        imshow("Filtrado", resulC[0]); //-- BIEN (Y)
         if(waitKey(30) >= 0) break;
     }
 

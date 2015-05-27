@@ -21,4 +21,5 @@ unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
 
 HEADERS += \
-    filters.h
+    filters.h \
+    salencyMap.h

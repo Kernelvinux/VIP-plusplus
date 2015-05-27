@@ -26,6 +26,29 @@ typedef unsigned int uint;
 /*
 Funcion principal
 ***/
+
+/*********************************************************
+**  Convolucion kernel 7x7
+*
+*   Codigo Piero
+*   Piero Aqui!!!!!!!!!!
+*
+**********************************************************/
+Mat convolutionK7(Mat image, float kernel[7][7]){
+    Mat  out;   // Salida de la funcion
+    uint i,j;   // Variables de bucle
+
+    rows = image.rows;
+    cols = image.cols;
+
+    for (i=0;i<rows;i++) for(j=0;j<cols;j++){
+        out.at<float>(i,j);
+        kernel[i][j];
+    }
+
+    return out;
+}
+
 int main(){
 /*********************************************************
 **  Definicion de variables principales
@@ -88,6 +111,8 @@ int main(){
 
         Mat fitr1;
 
+        
+        
         filter2D(frameF, fitr1, CV_32FC3, krnGauss);
         resize(fitr1, fitr1, Size(), 0.5, 0.5);
 

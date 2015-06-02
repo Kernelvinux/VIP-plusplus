@@ -53,6 +53,29 @@ float GabborFilter_135[7][7] = {{ 0.287323786082038,	 0.536404028842199,	 0.0895
                                 { 0.0936538505193276,	 0.395788446212621,	 0.275146412309302,	 -0.371656367890720,	-0.660485759126543,	-0.180932827883210,	    0.287323786082039}};
 
 
+
+/*********************************************************
+**  Convolucion kernel 7x7
+*
+*   Codigo Piero
+*   Piero Aqui!!!!!!!!!!
+*
+**********************************************************/
+Mat convolutionK7(Mat image, float kernel[7][7]){
+    Mat  out;   // Salida de la funcion
+    uint i,j;   // Variables de bucle
+
+    rows = image.rows;
+    cols = image.cols;
+
+    for (i=0;i<rows;i++) for(j=0;j<cols;j++){
+        out.at<float>(i,j);
+        kernel[i][j];
+    }
+
+    return out;
+}
+
 float **convolutionK7(float **image,float kernel[7][7],size_t rows, size_t cols){
     float **outImg;
     uint       i,j;

@@ -24,7 +24,6 @@ typedef unsigned int       uint;
 typedef vector<Mat>     Feature;
 typedef vector<Mat>  Multiscale;
 
-
 /*********************************************************
 **  Pyramid
 *
@@ -142,7 +141,8 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
              orientation45,
              orientation90,
             orientation135;
-    Mat averageColor;
+    Mat       averageColor;
+    vector<Feature> stcFeactures;
     uint i;
 
 //- Piramide Gauss y Gabbor
@@ -159,11 +159,11 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     colorGab135 = Pyramid(averageColor,GabborFilter_135);
 
 //- Intensidad
-    // Diferencia cientro-alrededor
     for (i=0;i<8;i++)
         intensityGauss.push_back( redGauss(i)+greenGauss(i)+blueGauss(i) );
 
     intensity = centerSurround(intensityGauss,intensityGauss);
+    stcFeactures.push_back(intensity);
 
 //- Orientacion
     orientation0   = centerSurround(colorGab0  ,colorGab0  );
@@ -171,14 +171,33 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     orientation90  = centerSurround(colorGab90 ,colorGab90 );
     orientation135 = centerSurround(colorGab135,colorGab135);
 
+    stcFeactures.push_back(orientation0  );
+    stcFeactures.push_back(orientation45 );
+    stcFeactures.push_back(orientation90 );
+    stcFeactures.push_back(orientation135);
+
 //- Color
     for (i=0;i<8;i++){
-        rgGssP.push_back( 3/4*(redGauss(i)-greenGauss(i)) );
-        rcGssP.push_back( 1/2*(5*redGauss(i)-greenGauss(i)-rdGrnGauss(i)) - 2*blueGauss(i));
-        byGssP.push_back(2*blueGauss(i) - redGauss(i) - greenGauss(i) + rdGrnGauss(i)/2);
+        rgGssP.push_back(3/4*(redGauss(i)-greenGauss(i)) );
+        rcGssP.push_back(1/2*(5*redGauss(i)-greenGauss(i)-rdGrnGauss(i)) - 2*blueGauss(i));
+        byGssP.push_back(  2*blueGauss(i) - redGauss(i) - greenGauss(i) + rdGrnGauss(i)/2);
         gmGssP.push_back(1/2*(5*greenGauss(i)-rdGrnGauss(i)-redGauss(i)) - 2*blueGauss(i));
+
+        rgGssN.push_back(-rgGssP(i));
+        rcGssN.push_back(-rcGssP(i));
+        byGssN.push_back(-byGssP(i));
+        gmGssN.push_back(-gmGssP(i));
     }
 
+    colorRG = centerSurround(rgGssP,rgGssN);
+    colorRC = centerSurround(rcGssP,rcGssN);
+    colorBY = centerSurround(byGssP,byGssN);
+    colorGM = centerSurround(gmGssP,gmGssN);
+
+    stcFeactures.push_back(colorRG);
+    stcFeactures.push_back(colorRC);
+    stcFeactures.push_back(colorBY);
+    stcFeactures.push_back(colorGM);
 }
 
 /*********************************************************

@@ -18,7 +18,7 @@ typedef vector<Mat>  Multiscale;
 /*
 Funciones
 ***/
-Multiscale Pyramid(Mat img, float kernel[7][7]);
+Multiscale Pyramid(Mat img, Mat kernel);
 Multiscale centerSurround(Multiscale pyrm);
 Multiscale centerSurround(Multiscale pyrm1, Multiscale pyrm2);
 vector<Feature> staticFeatures(Mat red, Mat green, Mat blue);

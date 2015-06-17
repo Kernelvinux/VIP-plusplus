@@ -7,49 +7,50 @@
 *   resul.at(0) = suma multiescala
 *
 **********************************************************/
-Multiscale Pyramid(Mat img, const float kernel[7][7]){
+Multiscale Pyramid(Mat img, Mat kernel){
     Mat         aux;
     Multiscale pyrm;
 
     // Nivel 1
-    aux = convolutionK7(img, kernel);
+    filter2D(img, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
+
     // Nivel 2
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
     // Nivel 3
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
     // Nivel 4
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
     // Nivel 5
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
-/*
+
     // Nivel 6
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
     // Nivel 7
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
     resize(aux, aux, Size(), 0.5, 0.5);
 
     // Nivel 8
-    aux = convolutionK7(aux, kernel);
+    filter2D(aux, aux, CV_32F, kernel);
     pyrm.push_back(aux);
-    resize(aux, aux, Size(), 0.5, 0.5);*/
+    resize(aux, aux, Size(), 0.5, 0.5);
 
     return pyrm;
 }
@@ -155,10 +156,10 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     uint i;
 
 //- Piramide Gauss y Gabbor
-      redGauss = Pyramid(     red,GaussianFilter);
-/*    greenGauss = Pyramid(   green,GaussianFilter);
-     blueGauss = Pyramid(    blue,GaussianFilter);
-    rdGrnGauss = Pyramid(red-blue,GaussianFilter);
+      redGauss = Pyramid(     red,filterGauss);
+    greenGauss = Pyramid(   green,filterGauss);
+     blueGauss = Pyramid(    blue,filterGauss);
+    rdGrnGauss = Pyramid(red-blue,filterGauss);
 
 /*    averageColor = red+green+blue;
 

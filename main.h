@@ -13,6 +13,8 @@ Librerias
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
+#include <time.h>
+
 #include "filters.h"
 #include "featuresVIP.h"
 

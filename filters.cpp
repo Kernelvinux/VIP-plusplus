@@ -6,6 +6,7 @@
 *   Piero Aqui!!!!!!!!!!
 *
 **********************************************************/
+/*
 Mat convolutionK7(Mat image, const float kernel[7][7]){
     Mat  outImg;   // Salida de la funcion
     uint i,j;      // Variables de bucle
@@ -273,3 +274,4 @@ float **convolutionK7(float **image,float kernel[7][7],size_t rows, size_t cols)
 
     return outImg;
 }
+*/

@@ -8,13 +8,11 @@ using namespace std;
 /*
 Tipo de datos
 ***/
-typedef unsigned int       uint;
+typedef unsigned int uint;
 
-int main(){
+void generarCuerpo(uint orden){
     uint x,y;
-    uint orden,ord;
-
-    orden = 7;
+    uint ord;
 
     ord = (orden-1)/2;
 
@@ -110,6 +108,32 @@ int main(){
     // x=ord
     cout << "image.at<float>(i+" << ord << ",j+" << ord << ")*";
     cout << "kernel[" << ord*2 << "][" << ord*2<< "];" << endl;
+}
+
+void generarEsquinas(uint orden){
+    uint x,y,
+         i,j,
+         ord;
+
+    ord = (orden-1)/2;
+
+    for (i=0;i<=ord;i++){
+        for (j=0;j<=ord;j++){
+            cout << "image.at<float>(i,j) = ";
+
+            for (x=0;x<=orden;x++){
+                for (y=0;y<=orden;y++){
+
+
+                }
+            }
+
+        }
+    }
+}
+
+int main(){
+    generarCuerpo(7);
 
     return 0;
 }

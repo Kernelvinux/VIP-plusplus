@@ -1,28 +1,4 @@
-#ifndef SALENCYMAP_H
-#define SALENCYMAP_H
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <iostream>
-#include "opencv2/opencv.hpp"
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <filters.h>
-#include <vector>
-
-/*
-Espacios de trabajo
-***/
-using namespace  cv;
-using namespace std;
-
-/*
-Tipo de datos
-***/
-typedef unsigned int       uint;
-typedef vector<Mat>     Feature;
-typedef vector<Mat>  Multiscale;
+#include "featuresVIP.h"
 
 /*********************************************************
 **  Pyramid
@@ -31,16 +7,49 @@ typedef vector<Mat>  Multiscale;
 *   resul.at(0) = suma multiescala
 *
 **********************************************************/
-Multiscale Pyramid(Mat img, float kernel[][]){
+Multiscale Pyramid(Mat img, const float kernel[7][7]){
     Mat         aux;
     Multiscale pyrm;
-    uint          i;
 
-    for (i=0;i<8;i++){
-        aux = convolutionK7(img, kernel);
-        pyrm.push_back(aux);
-        resize(aux, aux, Size(), 0.5, 0.5);
-    }
+    // Nivel 1
+    aux = convolutionK7(img, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 2
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 3
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 4
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 5
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+/*
+    // Nivel 6
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 7
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);
+
+    // Nivel 8
+    aux = convolutionK7(aux, kernel);
+    pyrm.push_back(aux);
+    resize(aux, aux, Size(), 0.5, 0.5);*/
 
     return pyrm;
 }
@@ -147,11 +156,11 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 
 //- Piramide Gauss y Gabbor
       redGauss = Pyramid(     red,GaussianFilter);
-    greenGauss = Pyramid(   green,GaussianFilter);
+/*    greenGauss = Pyramid(   green,GaussianFilter);
      blueGauss = Pyramid(    blue,GaussianFilter);
     rdGrnGauss = Pyramid(red-blue,GaussianFilter);
 
-    averageColor = red+green+blue;
+/*    averageColor = red+green+blue;
 
     colorGab0   = Pyramid(averageColor,GabborFilter_0  );
     colorGab45  = Pyramid(averageColor,GabborFilter_45 );
@@ -159,8 +168,8 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     colorGab135 = Pyramid(averageColor,GabborFilter_135);
 
 //- Intensidad
-    for (i=0;i<8;i++)
-        intensityGauss.push_back( redGauss(i)+greenGauss(i)+blueGauss(i) );
+/*    for (i=0;i<8;i++)
+        intensityGauss.push_back( redGauss[i]+greenGauss[i]+blueGauss[i] );
 
     intensity = centerSurround(intensityGauss,intensityGauss);
     stcFeactures.push_back(intensity);
@@ -178,15 +187,15 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 
 //- Color
     for (i=0;i<8;i++){
-        rgGssP.push_back(3/4*(redGauss(i)-greenGauss(i)) );
-        rcGssP.push_back(1/2*(5*redGauss(i)-greenGauss(i)-rdGrnGauss(i)) - 2*blueGauss(i));
-        byGssP.push_back(  2*blueGauss(i) - redGauss(i) - greenGauss(i) + rdGrnGauss(i)/2);
-        gmGssP.push_back(1/2*(5*greenGauss(i)-rdGrnGauss(i)-redGauss(i)) - 2*blueGauss(i));
+        rgGssP.push_back(3/4*(redGauss[i]-greenGauss[i]) );
+        rcGssP.push_back(1/2*(5*redGauss[i]-greenGauss[i]-rdGrnGauss[i]) - 2*blueGauss[i]);
+        byGssP.push_back(  2*blueGauss[i] - redGauss[i] - greenGauss[i] + rdGrnGauss[i]/2);
+        gmGssP.push_back(1/2*(5*greenGauss[i]-rdGrnGauss[i]-redGauss[i]) - 2*blueGauss[i]);
 
-        rgGssN.push_back(-rgGssP(i));
-        rcGssN.push_back(-rcGssP(i));
-        byGssN.push_back(-byGssP(i));
-        gmGssN.push_back(-gmGssP(i));
+        rgGssN.push_back(-rgGssP[i]);
+        rcGssN.push_back(-rcGssP[i]);
+        byGssN.push_back(-byGssP[i]);
+        gmGssN.push_back(-gmGssP[i]);
     }
 
     colorRG = centerSurround(rgGssP,rgGssN);
@@ -197,7 +206,9 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     stcFeactures.push_back(colorRG);
     stcFeactures.push_back(colorRC);
     stcFeactures.push_back(colorBY);
-    stcFeactures.push_back(colorGM);
+    stcFeactures.push_back(colorGM);*/
+
+    return stcFeactures;
 }
 
 /*********************************************************
@@ -209,7 +220,3 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 Mat saliencyMap(Mat red, Mat gren, Mat blue){
 
 }
-
-
-
-#endif // SALENCYMAP_H

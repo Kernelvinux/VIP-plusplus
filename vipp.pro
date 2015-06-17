@@ -15,11 +15,14 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    featuresVIP.cpp \
+    filters.cpp
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
 
 HEADERS += \
     filters.h \
-    salencyMap.h
+    main.h \
+    featuresVIP.h

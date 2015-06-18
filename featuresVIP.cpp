@@ -59,9 +59,9 @@ Multiscale Pyramid(Mat img, Mat kernel){
 **  Center Surround
 *
 *   Retorna vector de Mat.
-*   cenSrr = pyrm(c) O pyrm(s)
-*            c={2,3,4} s=c+d
-*            d={3,4}
+*   cenSrr(c,s) = pyrm(c) O pyrm(s)
+*              c={2,3,4} s=c+d
+*              d={3,4}
 *
 **********************************************************/
 Multiscale centerSurround(Multiscale pyrm){
@@ -86,10 +86,12 @@ Multiscale centerSurround(Multiscale pyrm){
     aux6 = pyrm.at(3)-pyrm.at(7);
 
     cenSurr.push_back(aux1);
-    cenSurr.push_back(aux2);
-    cenSurr.push_back(aux3);
     cenSurr.push_back(aux4);
+
+    cenSurr.push_back(aux2);
     cenSurr.push_back(aux5);
+
+    cenSurr.push_back(aux3);
     cenSurr.push_back(aux6);
 
     return cenSurr;
@@ -117,10 +119,12 @@ Multiscale centerSurround(Multiscale pyrm1, Multiscale pyrm2){
     aux6 = pyrm1.at(3)-pyrm2.at(7);
 
     cenSurr.push_back(aux1);
-    cenSurr.push_back(aux2);
-    cenSurr.push_back(aux3);
     cenSurr.push_back(aux4);
+
+    cenSurr.push_back(aux2);
     cenSurr.push_back(aux5);
+
+    cenSurr.push_back(aux3);
     cenSurr.push_back(aux6);
 
     return cenSurr;
@@ -128,6 +132,21 @@ Multiscale centerSurround(Multiscale pyrm1, Multiscale pyrm2){
 
 /*********************************************************
 **  Static Features
+*
+*   Retorna un vector Feature en el siguiente orden:
+*                                   -[0] Intensidad,
+*                                   -[1] Orientacion 0,
+*                                   -[2] Orientacion 45,
+*                                   -[3] Orientacion 90,
+*                                   -[4] Orientacion 135,
+*                                   -[5] color RG
+*                                   -[6] color RC,
+*                                   -[7] color BY,
+*                                   -[8] color BM.
+*
+*   Feature es un vector de Mat de diferentes dimensiones,
+*   resultantes de la operancion centro-alrededor
+*
 **********************************************************/
 vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 //- Definicion de variables principales
@@ -156,20 +175,20 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     uint i;
 
 //- Piramide Gauss y Gabbor
-      redGauss = Pyramid(     red,filterGauss);
-    greenGauss = Pyramid(   green,filterGauss);
-     blueGauss = Pyramid(    blue,filterGauss);
-    rdGrnGauss = Pyramid(red-blue,filterGauss);
+      redGauss = Pyramid(     red,krnGauss);
+    greenGauss = Pyramid(   green,krnGauss);
+     blueGauss = Pyramid(    blue,krnGauss);
+    rdGrnGauss = Pyramid(red-blue,krnGauss);
 
-/*    averageColor = red+green+blue;
+    averageColor = red+green+blue;
 
-    colorGab0   = Pyramid(averageColor,GabborFilter_0  );
-    colorGab45  = Pyramid(averageColor,GabborFilter_45 );
-    colorGab90  = Pyramid(averageColor,GabborFilter_90 );
-    colorGab135 = Pyramid(averageColor,GabborFilter_135);
+    colorGab0   = Pyramid(averageColor,krnGabbor_0  );
+    colorGab45  = Pyramid(averageColor,krnGabbor_45 );
+    colorGab90  = Pyramid(averageColor,krnGabbor_90 );
+    colorGab135 = Pyramid(averageColor,krnGabbor_135);
 
 //- Intensidad
-/*    for (i=0;i<8;i++)
+    for (i=0;i<8;i++)
         intensityGauss.push_back( redGauss[i]+greenGauss[i]+blueGauss[i] );
 
     intensity = centerSurround(intensityGauss,intensityGauss);
@@ -188,10 +207,10 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 
 //- Color
     for (i=0;i<8;i++){
-        rgGssP.push_back(3/4*(redGauss[i]-greenGauss[i]) );
-        rcGssP.push_back(1/2*(5*redGauss[i]-greenGauss[i]-rdGrnGauss[i]) - 2*blueGauss[i]);
-        byGssP.push_back(  2*blueGauss[i] - redGauss[i] - greenGauss[i] + rdGrnGauss[i]/2);
-        gmGssP.push_back(1/2*(5*greenGauss[i]-rdGrnGauss[i]-redGauss[i]) - 2*blueGauss[i]);
+        rgGssP.push_back(0.75*(redGauss[i]-greenGauss[i]) );
+        rcGssP.push_back( 0.5*(5*redGauss[i]-greenGauss[i]-rdGrnGauss[i]) -   2*blueGauss[i] );
+        byGssP.push_back(   2*blueGauss[i] - redGauss[i] - greenGauss[i]  + 0.5*rdGrnGauss[i]);
+        gmGssP.push_back( 0.5*(5*greenGauss[i]-rdGrnGauss[i]-redGauss[i]) -   2*blueGauss[i] );
 
         rgGssN.push_back(-rgGssP[i]);
         rcGssN.push_back(-rcGssP[i]);
@@ -207,7 +226,7 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
     stcFeactures.push_back(colorRG);
     stcFeactures.push_back(colorRC);
     stcFeactures.push_back(colorBY);
-    stcFeactures.push_back(colorGM);*/
+    stcFeactures.push_back(colorGM);
 
     return stcFeactures;
 }
@@ -218,6 +237,18 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 *   Basado en Itti
 *
 **********************************************************/
-Mat saliencyMap(Mat red, Mat gren, Mat blue){
+Mat saliencyMap(Mat red, Mat green, Mat blue){
+    vector<Feature> stcFeactures;
+    Mat mapS;
 
+    stcFeactures = staticFeatures(red,green,blue);
+
+    int i = 7;
+    double  minVal, maxVal;
+    minMaxLoc(stcFeactures[i][0],&minVal,&maxVal);
+    mapS = (stcFeactures[i][0]-minVal)*255/(maxVal-minVal);
+
+    mapS.convertTo(mapS, CV_8UC3);
+
+    return mapS;
 }

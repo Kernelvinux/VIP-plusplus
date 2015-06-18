@@ -8,9 +8,9 @@ int main(){
 **  Definicion de variables principales
 **********************************************************/
     Mat frame,      // Captura de la camara
-        frameF;
+        frameF,
+        frameOut;
     vector<Mat> frameC(3);
-    vector<Feature> caracteristica;
 
 /*********************************************************
 **  Configuracion de camara
@@ -20,7 +20,7 @@ int main(){
     return -1;
 
     namedWindow("Camara",1);
-    //namedWindow("Filtrado",1);
+    namedWindow("Saliency",1);
 
 /*********************************************************
 **  Bucle principal
@@ -30,10 +30,10 @@ int main(){
         frame.convertTo(frameF, CV_32FC3);
         split(frameF,frameC);
 
-        caracteristica = staticFeatures(frameC[0],frameC[1],frameC[2]);
+        frameOut = saliencyMap(frameC[0],frameC[1],frameC[2]);
 
         imshow("Camara", frame);
-        //imshow("Filtrado", resulC[0]);
+        imshow("Saliency", frameOut);
         if(waitKey(30) >= 0) break;
     }
 

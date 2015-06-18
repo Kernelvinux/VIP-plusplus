@@ -268,6 +268,7 @@ Mat dynamicFeatures(Mat image, vector<Mat> &imageGM, vector<Mat> &imageGb){
     Gb+= Rb[3]*imageGb[3] + Rb[4]*imageGb[4] + Rb[5]*imageGb[5];*/
 
     dynamic = GM;
+    // dynamic = GM + Gb;
 
     double  minVal, maxVal;
     Mat mapD;

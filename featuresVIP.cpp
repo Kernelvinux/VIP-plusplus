@@ -232,6 +232,54 @@ vector<Feature> staticFeatures(Mat red, Mat green, Mat blue){
 }
 
 /*********************************************************
+**  Dynamic Features
+*
+*
+**********************************************************/
+Mat dynamicFeatures(Mat image, vector<Mat> &imageGM, vector<Mat> &imageGb){
+    Mat     dynamic;
+    uint          i;
+    Mat filGM,filGb;
+    Mat       GM,Gb;
+
+    filter2D(image, filGM, CV_32FC3, krn7GM);
+    filter2D(image, filGb, CV_32FC3, krn7Gb);
+
+    if(imageGM.size()>=7){
+        imageGM.erase( imageGM.begin() );
+        imageGb.erase( imageGb.begin() );
+    }
+
+    imageGM.push_back(filGM);
+    imageGb.push_back(filGb);
+
+    GM = RM[imageGM.size()-1]*imageGM[0];
+    for(i=1;i<imageGM.size();++i)
+        GM += RM[imageGM.size()-1-i]*imageGM[i];
+
+    Gb = Rb[imageGb.size()-1]*imageGb[0];
+    for(i=1;i<imageGb.size();++i)
+        Gb += Rb[imageGb.size()-1-i]*imageGb[i];
+
+    /*GM = RM[0]*imageGM[0] + RM[1]*imageGM[1] + RM[2]*imageGM[2];
+    GM+= RM[3]*imageGM[3] + RM[4]*imageGM[4] + RM[5]*imageGM[5];
+
+    Gb = Rb[0]*imageGb[0] + Rb[1]*imageGb[1] + Rb[2]*imageGb[2];
+    Gb+= Rb[3]*imageGb[3] + Rb[4]*imageGb[4] + Rb[5]*imageGb[5];*/
+
+    dynamic = GM;
+
+    double  minVal, maxVal;
+    Mat mapD;
+    minMaxLoc(dynamic,&minVal,&maxVal);
+    mapD = (dynamic-minVal)*255/(maxVal-minVal);
+
+    mapD.convertTo(mapD, CV_8UC3);
+
+    return mapD;
+}
+
+/*********************************************************
 **  Saliency Map
 *
 *   Basado en Itti

@@ -23,5 +23,6 @@ Multiscale centerSurround(Multiscale pyrm);
 Multiscale centerSurround(Multiscale pyrm1, Multiscale pyrm2);
 vector<Feature> staticFeatures(Mat red, Mat green, Mat blue);
 Mat saliencyMap(Mat red, Mat gren, Mat blue);
+Mat dynamicFeatures(Mat image, vector<Mat> &imageGM, vector<Mat> &imageGb);
 
 #endif // FEATURESVIP_H

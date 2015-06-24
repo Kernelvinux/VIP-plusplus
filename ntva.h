@@ -2,7 +2,7 @@
 #define NTVA_H
 
 #include "main.h"
-#include ""
+#include "object.h"
 
 /*
  * Espacios de Trabajo

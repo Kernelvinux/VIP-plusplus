@@ -18,6 +18,7 @@ TEMPLATE = app
 SOURCES += main.cpp \
     featuresVIP.cpp \
     filters.cpp \
+    object.cpp \
     ntva.cpp
 
 unix: CONFIG += link_pkgconfig
@@ -27,4 +28,5 @@ HEADERS += \
     filters.h \
     main.h \
     featuresVIP.h \
+    object.h \
     ntva.h

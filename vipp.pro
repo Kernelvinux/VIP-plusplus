@@ -17,7 +17,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     featuresVIP.cpp \
-    filters.cpp
+    filters.cpp \
+    ntva.cpp
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
@@ -25,4 +26,5 @@ unix: PKGCONFIG += opencv
 HEADERS += \
     filters.h \
     main.h \
-    featuresVIP.h
+    featuresVIP.h \
+    ntva.h

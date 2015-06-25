@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     featuresVIP.cpp \
     filters.cpp \
     object.cpp \
-    proto.cpp
+    proto.cpp \
+    ntva.cpp
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
@@ -29,4 +30,5 @@ HEADERS += \
     main.h \
     featuresVIP.h \
     object.h \
-    proto.h
+    proto.h \
+    ntva.h

@@ -17,7 +17,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     featuresVIP.cpp \
-    filters.cpp
+    filters.cpp \
+    object.cpp \
+    proto.cpp
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
@@ -25,4 +27,6 @@ unix: PKGCONFIG += opencv
 HEADERS += \
     filters.h \
     main.h \
-    featuresVIP.h
+    featuresVIP.h \
+    object.h \
+    proto.h

@@ -8,8 +8,8 @@ static float sumVector(float* vector, uint size){
     return sum;
 }
 
-static int** generarRegionesP2P(Pair topPair, Pair lowPair, int** topLabel, int &sizeLabel){
-    int** lowLabel;
+static int** generarRegionesP2P(Pair topPair, Pair lowPair, uint** topLabel, uint &sizeLabel){
+    uint** lowLabel;
     uint  topRows, topCols,
           lowRows, lowCols;
     uint    i,j,
@@ -120,6 +120,7 @@ static int** generarRegionesP2P(Pair topPair, Pair lowPair, int** topLabel, int 
         }
     }
 
+    delete topLabel;
     return lowLabel;
 }
 
@@ -233,12 +234,36 @@ Pair convolutionSOR(Pair intPair){
     return outPair;
 }
 
-float** homogeneusRegions(vector<Pair>){
+float** homogeneusRegions(vector<Pair> pairs){
+    uint     **label;
+    uint       i,j,k;
+    uint   rows,cols;
+    uint   sizeLabel;
 
 /*********************************************************
 **  Top-down Pyramid
 **********************************************************/
+    // Inicializar label
+    k = pairs.size() - 1;
+    rows = pairs[k].rows;
+    cols = pairs[k].cols;
 
+    label = new uint [rows];
+    for(i=0;i<rows;i++) label[i] = new uint[cols];
+
+    for (i=0;i<rows;++i) for(j=0;j<cols;j++){
+        if (pairs[k].confidence[i][j] == 1){
+            ++sizeLabel;
+            label[i][j] = sizeLabel;
+        }
+    }
+    --k;
+
+    // Bucle Generar regiones Top Pair to Low Pair
+    while(k>0){
+        label = generarRegionesP2P(pairs[k],pairs[k-1],label,sizeLabel);
+        --k;
+    }
 
 /*********************************************************
 **  Ellipse approximation

@@ -8,6 +8,121 @@ static float sumVector(float* vector, uint size){
     return sum;
 }
 
+static int** generarRegionesP2P(Pair topPair, Pair lowPair, int** topLabel, int &sizeLabel){
+    int** lowLabel;
+    uint  topRows, topCols,
+          lowRows, lowCols;
+    uint    i,j,
+          i1,j1;
+          iS,jS;
+
+    topRows = topPair.rows;
+    topCols = topPair.cols;
+
+    lowRows = topPair.rows;
+    lowCols = lowPair.cols;
+
+
+//-- Inicializar punteros
+    lowLabel = new int*[lowRows];
+    for(i=0;i<lowRows;++i) lowLabel = new int [lowCols];
+
+/********************************************
+ *   __|___|___
+ *     |1 2|
+ *     |3 4|
+ *   ----------
+ *     |   |
+ * *********************************************/
+
+/*
+    for (i=2,i1=3;i1<lowRows-2;i+=2,i1=i+1){
+        iS = i*0.5;
+        // Superior de la cuadricula {1,2}
+        for (j=2,j1=3; j1<lowCols-2; j+=2,j1=j+1){
+            jS = j*0.5;
+            // Posicion 1 de la cuadricula
+            if(lowPair.confidence[i][j] == 1){
+                if(topLabel[iS][jS] != 0)
+                    lowLabel[i][j] = topLabel[iS][jS];
+
+                else if(topLabel[iS][jS-1] != 0){
+                    if (topLabel[iS-1][jS] != 0){
+                        if( (topPair.measurement.at<float>(iS-1,jS) - lowPair.measurement.at<float>(i,j))  >  );
+                        else;
+                    }
+                    else
+                        lowLabel[i][j] = topLabel[iS][jS-1];
+                }else if(topLabel[iS-1][jS] != 0)
+                    lowLabel[i][j] = topLabel[iS-1][jS];
+            }
+                
+                
+            // Posicion 2 de la cuadricula
+
+        }
+        // Superior de la cuadricula {3,4}
+        for (j=2,j1=3; j1<lowCols-2; j+=2,j1=j+1){
+            jS = j*0.5;
+            // Posicion 3 de la cuadricula
+
+            // Posicion 4 de la cuadricula
+
+        }
+    }*/
+
+    for (i=0,i1=3;i1<lowRows;i+=2,i1=i+1){
+        iS = i*0.5;
+        // Superior de la cuadricula {1,2}
+        for (j=0,j1=3; j1<lowCols; j+=2,j1=j+1){
+            jS = j*0.5;
+
+            // Misma etiqueta
+            if (topLabel[iS][jS] != 0){
+                // Posicion 1 de la cuadricula
+                if(lowPair.confidence[ i][ j] == 1)  lowLabel[ i][ j] = topLabel[iS][jS];
+
+                // Posicion 2 de la cuadricula
+                if(lowPair.confidence[ i][j1] == 1)  lowLabel[ i][j1] = topLabel[iS][jS];
+
+                // Posicion 3 de la cuadricula
+                if(lowPair.confidence[i1][ j] == 1)  lowLabel[i1][ j] = topLabel[iS][jS];
+
+                // Posicion 4 de la cuadricula
+                if(lowPair.confidence[i1][j1] == 1)  lowLabel[i1][j1] = topLabel[iS][jS];
+            }
+            // Nueva etiqueta
+            else{
+                // Posicion 1 de la cuadricula
+                if(lowPair.confidence[ i][ j] == 1){
+                    ++sizeLabel;
+                    lowLabel[ i][ j] = sizeLabel;
+                }
+
+                // Posicion 2 de la cuadricula
+                if(lowPair.confidence[ i][j1] == 1){
+                    ++sizeLabel;
+                    lowLabel[ i][j1] = sizeLabel;
+                }
+
+                // Posicion 3 de la cuadricula
+                if(lowPair.confidence[i1][ j] == 1){
+                    ++sizeLabel;
+                    lowLabel[i1][ j] = sizeLabel;
+                }
+
+                // Posicion 4 de la cuadricula
+                if(lowPair.confidence[i1][j1] == 1){
+                    ++sizeLabel;
+                    lowLabel[i1][j1] = sizeLabel;
+                }
+            }
+        }
+    }
+
+    return lowLabel;
+}
+
 Pair convolutionSOR(Pair intPair){
     uint   rows,        // Numero de filas
            cols;        // Numero de columnas
@@ -92,7 +207,7 @@ Pair convolutionSOR(Pair intPair){
         measurement.at<float>(i1_2,j1_2) = aux;
 
     //--Calculo r* (confidence)
-        confidence = (Nr>=rmin)? 1:0;
+        confidence[i1_2][j1_2] = (Nr>=rmin)? 1:0;
     }
 
 //--Problemas de frontera
@@ -112,12 +227,13 @@ Pair convolutionSOR(Pair intPair){
     outPair.measurement = measurement;
     outPair.confidence  = confidence ;
 
+    outPair.rows = rows;
+    outPair.cols = cols;
+
     return outPair;
 }
 
 float** homogeneusRegions(vector<Pair>){
-
-
 
 /*********************************************************
 **  Top-down Pyramid

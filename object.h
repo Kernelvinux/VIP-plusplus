@@ -12,13 +12,23 @@ struct Position{
 
 class Object{
 private:
+/*********************************************************
+**  Variables privadas
+**********************************************************/
     uint         idx;   // Id del objeto
     float     weight;   // Peso atencional del objeto
 
+//--Caracteristicas de forma
     Position topLeft;   // Posicion top-left en la imagen
     bool**     shape;   // Forma del objeto
     size_t      rows,   // Tamaño del objeto. Filas.
                 cols;   // Tamaño del objeto. Columnas.
+
+//--Ellipse
+    float  an;  // Medida de area
+    float *mn;  // Centroide
+    float *In;  // Matriz de inercia
+    float  pn;  // Promedio de la region
 
 /*********************************************************
 **  Funciones privadas
@@ -27,9 +37,17 @@ private:
 
 public:
 /*********************************************************
+**  Variables publicas
+**********************************************************/
+//--Raw moments
+    uint u00,u01,u02,
+         u11,u10,u20;
+
+/*********************************************************
 **  Contructores
 **********************************************************/
-    Object() {} // Contructor nulo
+    Object(); // Contructor nulo
+    Object(uint label);
 
 /*********************************************************
 **  Selectores
@@ -44,7 +62,7 @@ public:
 /*********************************************************
 **  Funciones publicas
 **********************************************************/
-
+    void ellipse();
 /*********************************************************
 **  Destructor
 **********************************************************/

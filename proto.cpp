@@ -235,10 +235,11 @@ Pair convolutionSOR(Pair intPair){
 }
 
 float** homogeneusRegions(vector<Pair> pairs){
-    uint     **label;
-    uint       i,j,k;
-    uint   rows,cols;
-    uint   sizeLabel;
+    uint          **label;
+    uint            i,j,k;
+    uint        rows,cols;
+    uint        sizeLabel;
+    uint         aux,aux2;
 
 /*********************************************************
 **  Top-down Pyramid
@@ -247,6 +248,7 @@ float** homogeneusRegions(vector<Pair> pairs){
     k = pairs.size() - 1;
     rows = pairs[k].rows;
     cols = pairs[k].cols;
+    sizeLabel = 0;
 
     label = new uint [rows];
     for(i=0;i<rows;i++) label[i] = new uint[cols];
@@ -268,8 +270,25 @@ float** homogeneusRegions(vector<Pair> pairs){
 /*********************************************************
 **  Ellipse approximation
 **********************************************************/
+    vector<Object> protos(sizeLabel);
 
+    //Raw Moments
+    for (i=0;i<rows;++i) for(j=0;j<cols;++j){
+        aux = label[i][j]-1;
 
+        ++protos[aux].u00;
+        Object::protos[aux].u10 += i;
+        Object::protos[aux].u01 += j;
+
+        Object::protos[aux].u11 += protos[aux].u10*protos[aux].u01;
+        Object::protos[aux].u20 += protos[aux].u10*protos[aux].u10;
+        Object::protos[aux].u02 += protos[aux].u01*protos[aux].u01;
+    }
+
+    // Ellipse
+    for (k=0;k<sizeLabel;++k){
+        Object::protos[k].ellipse();
+    }
 
 /*********************************************************
 **  Blob merging

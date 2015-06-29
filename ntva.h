@@ -13,8 +13,9 @@ using namespace std;
 /*
  * Funciones
  ***/
-int sensoryEvidence(object , int numObj);
-Mat
+int sensoryEvidence(Object Objeto, int numObj);
+int weightObject(int n, int PI);
+int normalizeWeights(int w);
 
 
 #endif // NTVA_H

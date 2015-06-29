@@ -15,7 +15,7 @@ int main(){
 /*********************************************************
 **  Configuracion de camara
 **********************************************************/
-    VideoCapture cap(1);    // open the default camera
+    VideoCapture cap(0);    // open the default camera
     if(!cap.isOpened())     // check if we succeeded
     return -1;
 
@@ -30,12 +30,14 @@ int main(){
         frame.convertTo(frameF, CV_32FC3);
         split(frameF,frameC);
 
-        //frameOut = saliencyMap(frameC[0],frameC[1],frameC[2]);
+        frameOut = saliencyMap(frameC[0],frameC[1],frameC[2]);
 
         vector<Mat> imageGM;
         vector<Mat> imageGb;
+        vector<Feature> dynamic(3);
 
-        frameOut = dynamicFeatures(frameF, imageGM, imageGb);
+        //dynamic = dynamicFeatures(frameC[0]+frameC[1]+frameC[2], dynamic);
+        //frameOut = dynamic[3][0];
 
         imshow("Camara", frame);
         imshow("Saliency", frameOut);

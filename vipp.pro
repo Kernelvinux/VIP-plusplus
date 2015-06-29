@@ -19,6 +19,7 @@ SOURCES += main.cpp \
     featuresVIP.cpp \
     filters.cpp \
     object.cpp \
+    proto.cpp \
     ntva.cpp
 
 unix: CONFIG += link_pkgconfig
@@ -29,4 +30,5 @@ HEADERS += \
     main.h \
     featuresVIP.h \
     object.h \
+    proto.h \
     ntva.h
